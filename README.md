@@ -1,4 +1,4 @@
 # Survey-Backend
-Mongo db hesap bilgileri settings.json içinde
-npm i 
-npm start
+<p>Mongo db hesap bilgileri settings.json içinde</p>
+<p>npm i</p> 
+<p>npm start</p>
