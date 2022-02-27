@@ -10,41 +10,8 @@ exports.getSession = async (req, res) => {
     }
     res.json(req.session);
 };
-exports.getStores = async (req, res) => {
-    try {
-        const result = await User.find({companyType: "2"});
-        res.json(result);
-    } catch (e) {
-        res.json("Something went wrong!").status(500);
-    }
-}
-exports.changeRating = async (req, res) => {
-    const {targetId, rate} = req.body;
-    console.log(rate)
-    const {session} = req;
-    try {
-        const result = await User.findById(targetId);
-        if (result.rate.length > 0) {
-            await User.findByIdAndUpdate(targetId, {
-                $pull: {
-                    rate: {ratedBy: session.user._id}
-                }
-            });
-        }
-        await User.findByIdAndUpdate(targetId, {
 
-            $push: {
-                rate: {ratedBy: session.user._id, rate}
-            }
-        });
 
-        res.json("Rated!");
-    } catch (e) {
-        console.log(e)
-        res.json("Something went wrong!").status(500);
-    }
-
-}
 exports.searchUsers = async (req, res) => {
     const {keyword} = req.body;
 
@@ -150,16 +117,8 @@ exports.postRegister = async (req, res) => {
     const password = body.password;
     const image = req.file.filename;
     const userType = body.userType;
-    const fieldsOfActivity = body.fieldsOfActivity;
-    const companyType = body.companyType;
-    const commercialTitle = body.commercialTitle;
-    const city = body.city;
-    const town = body.town;
-    const address = body.address;
-    const tcNo = body.tcNo;
-    const landPhone = body.landPhone;
 
-    if (userType === "1") {
+    
         User.findOne({email})
             .then((isSuccess) => {
                 if (isSuccess) {
@@ -167,7 +126,7 @@ exports.postRegister = async (req, res) => {
                 }
             })
             .catch((err) => console.log(err));
-        const user = new User({
+    const user = new User({
             name,
             surname,
             email,
@@ -182,38 +141,7 @@ exports.postRegister = async (req, res) => {
                 console.log(err);
                 res.json("Something went wrong!");
             });
-    } else {
-        User.findOne({email})
-            .then((isSuccess) => {
-                if (isSuccess) {
-                    res.json("User exists!");
-                }
-            })
-            .catch((err) => console.log(err));
-        const user = new User({
-            name,
-            surname,
-            email,
-            password,
-            image,
-            fieldsOfActivity,
-            companyType,
-            commercialTitle,
-            city,
-            town,
-            address,
-            tcNo,
-            landPhone,
-            rate: {}
-        });
-        user
-            .save()
-            .then(() => res.json("User is registered"))
-            .catch((err) => {
-                console.log(err);
-                res.json("Something went wrong!").status(500);
-            });
-    }
+     
 };
 exports.postLogin = (req, res) => {
     //Burda yetki verilecek!
